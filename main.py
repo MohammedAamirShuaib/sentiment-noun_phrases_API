@@ -29,64 +29,7 @@ class ListSentimentBaseModel(BaseModel):
 
 app = FastAPI()
 
-@app.post("/")
-async def get_sentiment_noun(sentence:SentimentBaseModel):
-    sentence = sentence.input
-    sentence = cleanhtml(sentence)
-    
-    sentiment = json.dumps(comprehend.detect_sentiment(Text=sentence, LanguageCode='en'),
-                           sort_keys=True,
-                           indent=4)
-    sentiment = json.loads(sentiment)['Sentiment']
-    noun_phrases = TextBlob(sentence).noun_phrases
-    noun_phrases = (','.join(map(str, noun_phrases)))
-    
-    if(len(noun_phrases) <= 1):  
-        aspect = get_asp(sentence)
-        descriptive_item = get_desp(sentence)
-        aspect_descp = descriptive_item +' ' +aspect
-        noun_phrases = aspect_descp
-    else:
-        noun_phrases = noun_phrases
-
-    output = {'sentence': sentence,'sentiment': sentiment, 'noun_phrases': noun_phrases}    
-
-    return output
-
-
-@app.post('/batch/')
-async def get_batch_sentiment(sentence_list:ListSentimentBaseModel):    
-    sentence_list = sentence_list.input
-    batch_sentiment = json.dumps(comprehend.batch_detect_sentiment(TextList=sentence_list, LanguageCode='en'),
-                           sort_keys=True,
-                           indent=4)
-    batch_sentiment = json.loads(batch_sentiment)
-    
-    sentiments_list=[]
-    for i in range(len(batch_sentiment['ResultList'])):
-        sentiment = batch_sentiment['ResultList'][i]['Sentiment']
-        sentiments_list.append(sentiment)
-
-    return sentiments_list
+@app.post('/batch_sentiment_25/')
+async def get_batch_sentiment(sentence_list:ListSentimentBaseModel):
 
 @app.post('/noun_phrases/')
-async def get_noun_phrases(sentence_list:ListSentimentBaseModel):
-    sentence_list = sentence_list.input
-    noun_phrases_list = []
-    for i in range(len(sentence_list)):
-      # html cleaning
-      sentence = str(sentence_list[i])
-      sentence = cleanhtml(sentence)
-      noun_phrases = TextBlob(sentence).noun_phrases
-      noun_phrases = (','.join(map(str, noun_phrases)))
-    
-      if(len(noun_phrases) <= 1):  
-          aspect = get_asp(sentence)
-          descriptive_item = get_desp(sentence)
-          aspect_descp = descriptive_item +' ' +aspect
-          noun_phrases = aspect_descp
-      else:
-          noun_phrases = noun_phrases
-      noun_phrases_list.append(noun_phrases)
-    
-    return noun_phrases_list
