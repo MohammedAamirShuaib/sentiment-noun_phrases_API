@@ -1,0 +1,8 @@
+boto3
+stanza
+textblob
+pandas
+datetime
+nltk
+fastapi
+uvicorn
