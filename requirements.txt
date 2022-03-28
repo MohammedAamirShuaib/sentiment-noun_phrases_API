@@ -6,3 +6,4 @@ datetime
 nltk
 fastapi
 uvicorn
+requests
