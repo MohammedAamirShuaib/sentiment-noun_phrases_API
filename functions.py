@@ -9,6 +9,11 @@ from datetime import datetime
 import time
 nlp = stanza.Pipeline('en', use_gpu=True)
 
+comprehend = boto3.client(service_name='comprehend',
+                          region_name='us-east-1',
+                          aws_access_key_id='AKIAWFPZMNZHUGEYWIIS',
+                          aws_secret_access_key='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')
+
 def get_asp(sentence):
     important = nlp(sentence)
     target = ''

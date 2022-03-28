@@ -21,15 +21,23 @@ comprehend = boto3.client(service_name='comprehend',
                           aws_access_key_id='AKIAWFPZMNZHUGEYWIIS',
                           aws_secret_access_key='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')
 
-class SentimentBaseModel(BaseModel):
-    input: str
+#class SentimentBaseModel(BaseModel):
+#    input: str
 
 class ListSentimentBaseModel(BaseModel):
     input: List[str]
 
 app = FastAPI()
 
-@app.post('/batch_sentiment_25/')
-async def get_batch_sentiment(sentence_list:ListSentimentBaseModel):
+@app.post('/sentiment/')
+async def sentiment(sentence_list:ListSentimentBaseModel):
+    sentence_list = sentence_list.input
+    sentiment_output = get_batch_sentiment(sentence_list)
+    return sentiment_output
+
 
 @app.post('/noun_phrases/')
+async def noun_phrases(sentence_list:ListSentimentBaseModel):
+    sentence_list = sentence_list.input
+    noun_phrases_output = get_noun_phrases(sentence_list)
+    return noun_phrases_output
