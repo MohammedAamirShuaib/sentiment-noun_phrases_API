@@ -68,3 +68,25 @@ async def get_batch_sentiment(sentence_list:ListSentimentBaseModel):
         sentiments_list.append(sentiment)
 
     return sentiments_list
+
+@app.post('/noun_phrases/')
+async def get_noun_phrases(sentence_list:ListSentimentBaseModel):
+    sentence_list = sentence_list.input
+    noun_phrases_list = []
+    for i in range(len(sentence_list)):
+      # html cleaning
+      sentence = str(sentence_list[i])
+      sentence = cleanhtml(sentence)
+      noun_phrases = TextBlob(sentence).noun_phrases
+      noun_phrases = (','.join(map(str, noun_phrases)))
+    
+      if(len(noun_phrases) <= 1):  
+          aspect = get_asp(sentence)
+          descriptive_item = get_desp(sentence)
+          aspect_descp = descriptive_item +' ' +aspect
+          noun_phrases = aspect_descp
+      else:
+          noun_phrases = noun_phrases
+      noun_phrases_list.append(noun_phrases)
+    
+    return noun_phrases_list
