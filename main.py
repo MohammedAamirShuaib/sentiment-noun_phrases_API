@@ -1,3 +1,4 @@
+import os
 import boto3
 import nltk
 import stanza
@@ -16,11 +17,6 @@ import uvicorn
 from pydantic import BaseModel
 from typing import List
 
-comprehend = boto3.client(service_name='comprehend',
-                          region_name='us-east-1',
-                          aws_access_key_id='AKIAWFPZMNZHUGEYWIIS',
-                          aws_secret_access_key='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')
-
 #class SentimentBaseModel(BaseModel):
 #    input: str
 
@@ -34,7 +30,6 @@ async def sentiment(sentence_list:ListSentimentBaseModel):
     sentence_list = sentence_list.input
     sentiment_output = get_batch_sentiment(sentence_list)
     return sentiment_output
-
 
 @app.post('/noun_phrases/')
 async def noun_phrases(sentence_list:ListSentimentBaseModel):

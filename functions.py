@@ -1,3 +1,4 @@
+import os
 import boto3
 import nltk
 import stanza
@@ -7,12 +8,18 @@ import re
 import json
 from datetime import datetime
 import time
+
+
+
 nlp = stanza.Pipeline('en', use_gpu=True)
+
+access_id = os.environ['access_id']
+secret_id = os.environ['secret_id']
 
 comprehend = boto3.client(service_name='comprehend',
                           region_name='us-east-1',
-                          aws_access_key_id='AKIAWFPZMNZHUGEYWIIS',
-                          aws_secret_access_key='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')
+                          aws_access_key_id=access_id,
+                          aws_secret_access_key=secret_id)
 
 def get_asp(sentence):
     important = nlp(sentence)
